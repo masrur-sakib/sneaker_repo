@@ -5,7 +5,7 @@ const { User } = require('../models');
 /**
  * Method: POST
  * Route: /api/users
- * Action: create a user
+ * Action: create a new user
  */
 router.post('/', async (req, res) => {
   try {

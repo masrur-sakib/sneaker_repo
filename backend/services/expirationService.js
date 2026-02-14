@@ -36,8 +36,9 @@ async function expireReservation(reservationId, dropId) {
       await transaction.commit();
 
       // Broadcast updated stock with websocket event
+      const io = getIO();
       const updatedDrop = await Drop.findByPk(dropId);
-      getIO().emit('stock-updated', {
+      io.emit('stock-updated', {
         dropId,
         availableStock: updatedDrop.availableStock,
       });

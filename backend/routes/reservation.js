@@ -27,8 +27,9 @@ router.post('/', async (req, res) => {
     }
 
     // Broadcast updated stock with websocket event
+    const io = getIO();
     const drop = await Drop.findByPk(dropId);
-    getIO().emit('stock-updated', {
+    io.emit('stock-updated', {
       dropId,
       availableStock: drop.availableStock,
     });

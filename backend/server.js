@@ -9,9 +9,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ============ ROUTES ============
+// Routes
+app.use('/api/users', require('./routes/users'));
+app.use('/api/drops', require('./routes/drops'));
+app.use('/api/reservations', require('./routes/reservations'));
+app.use('/api/purchases', require('./routes/purchases'));
 
-// ============ START SERVER ============
+// Start Server
 const PORT = process.env.PORT || 4000;
 async function startServer() {
   // Sync database (create tables)

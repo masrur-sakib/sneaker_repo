@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-
 const { Drop } = require('../models');
 const { createReservation } = require('../services/reservationService');
 const { getIO } = require('../socket');

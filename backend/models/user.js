@@ -1,7 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../configs/database');
 
-// User model (creates a "Users" table in PostgreSQL)
 const User = sequelize.define(
   'User',
   {

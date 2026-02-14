@@ -1,7 +1,7 @@
 const { Sequelize } = require('sequelize'); // ORM library
 require('dotenv').config();
 
-// Connection URL format is often easier
+// Connect DB with Connection URL
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: 'postgres',
   logging: false,

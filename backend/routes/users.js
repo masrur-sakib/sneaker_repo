@@ -32,6 +32,35 @@ router.post('/', async (req, res) => {
 });
 
 /**
+ * Method: POST
+ * Route: /api/users/login
+ * Action: login existing user
+ */
+router.post('/login', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
  * Method: GET
  * Route: /api/users
  * Action: get all users

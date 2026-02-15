@@ -9,15 +9,18 @@ const api = axios.create({
 
 // User APIs
 export const createNewUser = (userData) => api.post('/api/users', userData);
+export const loginUser = (email) => api.post('/api/users/login', { email });
 export const getAllUsers = () => api.get('/api/users');
 
 // Drop APIs
-export const createNewDrop = (dropData) => api.post('/api/drops', dropData);
+export const createDrop = (dropData) => api.post('/api/drops', dropData);
 export const getAllDrops = () => api.get('/api/drops');
+export const getDropById = (id) => api.get(`/api/drops/${id}`);
 
 // Reservation APIs
 export const createNewReservation = (reservationData) =>
   api.post(`/api/reservations`, reservationData);
+export const cancelReservation = (id) => api.delete(`/api/reservations/${id}`);
 
 // Purchase APIs
 export const completePurchase = (purchaseData) =>

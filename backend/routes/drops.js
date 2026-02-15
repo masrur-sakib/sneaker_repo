@@ -74,4 +74,25 @@ router.get('/', async (req, res) => {
   }
 });
 
+/**
+ * Method: GET
+ * Route: /api/drops/:id
+ * Action: get single drop by ID
+ */
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const drop = await Drop.findByPk(id);
+
+    if (!drop) {
+      return res.status(404).json({ error: 'Drop not found' });
+    }
+
+    res.json(drop);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;

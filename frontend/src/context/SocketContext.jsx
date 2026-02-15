@@ -12,12 +12,13 @@ export function SocketProvider({ children }) {
     const socket = io('http://localhost:4000');
 
     socket.on('connect', () => {
-      console.log('Socket connected:', socket.id);
+      // console.log('Socket connected:', socket.id);
+      console.log('Socket connected:');
     });
 
     // Listen for stock updates
     socket.on('stock-updated', (data) => {
-      console.log('Stock updated:', data);
+      // console.log('Stock updated:', data);
       setStockUpdates((prev) => ({
         ...prev,
         [data.dropId]: data.availableStock,
@@ -26,7 +27,7 @@ export function SocketProvider({ children }) {
 
     // Listen for purchase completions
     socket.on('purchase-completed', (data) => {
-      console.log('Purchase completed:', data);
+      // console.log('Purchase completed:', data);
       setRecentPurchase(data);
 
       // Clear notification after 5 seconds

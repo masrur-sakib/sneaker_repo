@@ -1,33 +1,29 @@
 const { sequelize, Drop, Reservation, User } = require('../models');
+const { scheduleExpirationCheck } = require('../services/expirationService');
 
 async function createReservation(dropId, userId) {
-  // transaction with row-level locking
   const transaction = await sequelize.transaction();
+  let reservation;
 
   try {
-    // SELECT FOR UPDATE locks the row,
-    // preventing other transactions from reading/modifying
-    // until this transaction completes
     const drop = await Drop.findByPk(dropId, {
       lock: transaction.LOCK.UPDATE,
       transaction,
     });
 
-    if (!drop) {
+    if (!drop || drop.availableStock <= 0) {
       await transaction.rollback();
-      return { success: false, error: 'Drop not found' };
-    }
-
-    if (drop.availableStock <= 0) {
-      await transaction.rollback();
-      return { success: false, error: 'Out of stock' };
+      return {
+        success: false,
+        error: !drop ? 'Drop not found' : 'Out of stock',
+      };
     }
 
     // Check if user already has an active reservation for this drop
     const existingReservation = await Reservation.findOne({
       where: {
-        UserId: userId,
-        DropId: dropId,
+        userId: userId,
+        dropId: dropId,
         status: 'active',
       },
       transaction,
@@ -41,35 +37,37 @@ async function createReservation(dropId, userId) {
       };
     }
 
-    // Decrement stock atomically
     await drop.decrement('availableStock', { by: 1, transaction });
 
-    // Create reservation with 60-second expiry
     const expiresAt = new Date(Date.now() + 60 * 1000);
-    const reservation = await Reservation.create(
-      {
-        UserId: userId,
-        DropId: dropId,
-        expiresAt,
-        status: 'active',
-      },
+    reservation = await Reservation.create(
+      { userId, dropId, expiresAt, status: 'active' },
       { transaction },
     );
 
-    await transaction.commit();
-
-    // Schedule expiration check
-    scheduleExpirationCheck(reservation.id, dropId, 60000);
-
-    return {
-      success: true,
-      reservation,
-      expiresAt,
-    };
+    await transaction.commit(); // Transaction is officially finished here
   } catch (error) {
-    await transaction.rollback();
+    // Only rollback if the transaction hasn't been committed yet
+    if (transaction) await transaction.rollback();
     throw error;
   }
+
+  // schedule expiration check
+  try {
+    if (typeof scheduleExpirationCheck === 'function') {
+      scheduleExpirationCheck(reservation.id, dropId, 60000);
+    } else {
+      console.error('Warning: scheduleExpirationCheck is not defined');
+    }
+  } catch (schedError) {
+    console.error('Failed to schedule expiration:', schedError);
+  }
+
+  return {
+    success: true,
+    reservation,
+    expiresAt: reservation.expiresAt,
+  };
 }
 
 module.exports = { createReservation };

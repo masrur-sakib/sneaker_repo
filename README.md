@@ -13,6 +13,31 @@ A full-stack application designed to handle high-concurrency "Limited Edition Sn
 - **ORM:** Sequelize
 - **Real-Time:** Socket.io for live stock updates and activity feeds
 
+## 📁 Project Structure
+```
+sneaker_repo/
+├── backend/                # Node.js + Express Server 
+│   ├── configs/            # Database configuration (Sequelize/PostgreSQL)
+│   ├── models/             # Sequelize models (User, Drop, Reservation, Purchase)
+│   ├── routes/             # API endpoints (e.g., /api/reservations)
+│   ├── services/           # Business logic (Atomic Reservation & Expiry checks)
+│   ├── socket/             # Socket.io configuration for real-time updates
+│   ├── test/               # Concurrency test scripts (test-concurrency.js)
+│   ├── server.js           # Server entry point
+│   └── package.json
+├── frontend/               # React Application
+│   ├── public/
+│   ├── src/
+│   │   ├── components/     # UI components (StockBadge, DropCard, etc.)
+│   │   ├── pages/          # UI pages (Home, Purchase, etc.)
+│   │   ├── App.js          # Main application logic
+│   │   └── index.js
+│   ├── tailwind.config.js  # Tailwind CSS configuration
+│   └── package.json
+├── .gitignore              # To exclude node_modules and .env files
+└── README.md               # Architecture documentation and setup guide
+```
+
 ## 🏗 Architecture Choices
 
 ### 1. Atomic Reservations & Concurrency

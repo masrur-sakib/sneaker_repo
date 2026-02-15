@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { useSocket } from '../context/SocketContext';
 import StockBadge from './StockBadge';
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
 
 const DropCard = ({ drop }) => {
   const { stockUpdates } = useSocket();
@@ -51,6 +53,33 @@ const DropCard = ({ drop }) => {
               : 'No end date'}
           </span>
         </div>
+
+        {/* Recent Purchasers Section */}
+        {drop.Purchases.length > 0 && (
+          <div className='mb-4 p-3 bg-gray-50 rounded-lg'>
+            <p className='text-xs text-gray-500 mb-3 font-medium'>
+              Recent Purchasers
+            </p>
+            <div className='space-y-2'>
+              {drop.Purchases.map((purchase) => (
+                <div key={purchase.id} className='flex items-center gap-2'>
+                  <div
+                    className={`w-6 h-6 rounded-full bg-blue-500
+              flex items-center justify-center text-white text-xs font-bold`}
+                  >
+                    {purchase.User.username.charAt(0).toUpperCase()}
+                  </div>
+                  <p className='text-xs text-gray-700 font-medium flex-1 truncate'>
+                    {purchase.User.username}
+                  </p>
+                  <p className='text-xs text-gray-400'>
+                    {dayjs(purchase.createdAt).fromNow()}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <Link
           to={`/drops/${drop.id}`}

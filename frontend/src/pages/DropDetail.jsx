@@ -5,6 +5,7 @@ import { useUser } from '../context/UserContext';
 import { useSocket } from '../context/SocketContext';
 import StockBadge from '../components/StockBadge';
 import LoadingSpinner from '../components/LoadingSpinner';
+import toast from 'react-hot-toast';
 import dayjs from 'dayjs';
 
 const DropDetail = () => {
@@ -21,6 +22,16 @@ const DropDetail = () => {
   useEffect(() => {
     fetchDrop();
   }, [id]);
+
+  // Show toast when stock updates to 0 from socket
+  useEffect(() => {
+    if (drop && stockUpdates[drop.id] === 0) {
+      toast.error('Item just sold out! Another user grabbed the last one.', {
+        duration: 5000,
+        icon: '🔥',
+      });
+    }
+  }, [stockUpdates, drop]);
 
   const fetchDrop = async () => {
     try {
@@ -49,23 +60,51 @@ const DropDetail = () => {
       });
       const reservationData = reservationResponse.data.reservation;
 
+      toast.success('Reservation successful!', { duration: 3000 });
+
       navigate(`/purchase/${reservationData.id}`, {
         state: { reservation: reservationData, drop },
       });
     } catch (err) {
-      if (err.reservationResponse?.status === 409) {
-        setError(
-          err.reservationResponse.data.error ||
-            'Unable to reserve. Item may be out of stock.',
+      const status = err.response?.status;
+      const errorMessage = err.response?.data?.error;
+
+      if (status === 400 && errorMessage?.includes('stock')) {
+        // Stock ran out due to concurrent requests
+        toast.error(
+          'Sorry! This item just sold out while you were reserving.',
+          {
+            duration: 5000,
+            icon: '⚡',
+          },
         );
-      } else if (err.reservationResponse?.status === 400) {
         setError(
-          err.reservationResponse.data.error ||
-            'You already have an active reservation.',
+          'Item sold out. Another user completed their reservation first.',
         );
+      } else if (status === 400) {
+        toast.error(errorMessage || 'You already have an active reservation.', {
+          duration: 4000,
+        });
+        setError(errorMessage || 'You already have an active reservation.');
+      } else if (status === 409) {
+        toast.error('Unable to reserve. Item may be out of stock.', {
+          duration: 4000,
+        });
+        setError(
+          errorMessage || 'Unable to reserve. Item may be out of stock.',
+        );
+      } else if (status === 404) {
+        toast.error('This drop no longer exists.', { duration: 4000 });
+        setError('Drop not found.');
       } else {
+        toast.error('Reservation failed. Please try again.', {
+          duration: 4000,
+        });
         setError('Reservation failed. Please try again.');
       }
+
+      // Refresh drop to get updated stock
+      fetchDrop();
     } finally {
       setReserving(false);
     }
@@ -95,7 +134,6 @@ const DropDetail = () => {
               src={drop.imageUrl}
               alt={drop.name}
               className='h-full w-full object-cover'
-              // Basic error handling to show the emoji if the link breaks
               onError={(e) => {
                 e.target.style.display = 'none';
                 e.target.nextSibling.style.display = 'block';
@@ -103,7 +141,6 @@ const DropDetail = () => {
             />
           ) : null}
 
-          {/* Fallback Emoji (Hidden unless image fails or is missing) */}
           <span className={`${drop.imageUrl ? 'hidden' : 'block'} text-6xl`}>
             👟
           </span>

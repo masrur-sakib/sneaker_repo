@@ -9,12 +9,14 @@ import DropDetail from './pages/DropDetail';
 import Purchase from './pages/Purchase';
 import Login from './pages/Login';
 import CreateDrop from './pages/CreateDrop';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
     <UserProvider>
       <SocketProvider>
         <BrowserRouter>
+          <Toaster position='top-center' />
           <div className='min-h-screen bg-gray-100'>
             <Navbar />
             <Routes>

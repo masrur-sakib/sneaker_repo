@@ -28,14 +28,16 @@ const Home = () => {
 
   return (
     <div className='max-w-6xl mx-auto px-4 py-8'>
-      <div className='text-center mb-12'>
-        <h1 className='text-4xl font-bold text-gray-800 mb-4'>
-          🔥 Active Drops
-        </h1>
-        <p className='text-gray-600 text-lg'>
-          Limited edition sneakers. First come, first served.
-        </p>
-      </div>
+      {drops.length > 0 && (
+        <div className='text-center mb-12'>
+          <h1 className='text-4xl font-bold text-gray-800 mb-4'>
+            Active Drops
+          </h1>
+          <p className='text-gray-600 text-lg'>
+            Limited edition sneakers. First come, first served.
+          </p>
+        </div>
+      )}
 
       {error && (
         <div className='bg-red-100 text-red-700 p-4 rounded-lg mb-6 text-center'>

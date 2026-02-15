@@ -106,7 +106,18 @@ const Purchase = () => {
           <div className='mt-6 bg-gray-50 p-6 rounded-lg'>
             <div className='flex items-center space-x-4'>
               <div className='w-20 h-20 bg-gray-800 rounded-lg flex items-center justify-center'>
-                <span className='text-3xl'>👟</span>
+                {drop.imageUrl ? (
+                  <img
+                    src={drop.imageUrl}
+                    alt={drop.name}
+                    className='h-full w-full object-cover'
+                    // Basic error handling to show the emoji if the link breaks
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'block';
+                    }}
+                  />
+                ) : null}
               </div>
               <div className='flex-1'>
                 <h3 className='font-bold text-lg text-gray-800'>{drop.name}</h3>
@@ -148,7 +159,7 @@ const Purchase = () => {
           <div className='mt-8 space-y-4'>
             <button
               onClick={handlePurchase}
-              disabled={processing}
+              disabled={processing || error}
               className='w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-lg font-bold text-lg transition disabled:opacity-50'
             >
               {processing
@@ -158,7 +169,7 @@ const Purchase = () => {
 
             <button
               onClick={handleCancel}
-              disabled={cancelling}
+              disabled={cancelling || error}
               className='w-full bg-gray-200 hover:bg-gray-300 text-gray-700 py-3 rounded-lg font-semibold transition disabled:opacity-50'
             >
               {cancelling ? 'Cancelling...' : 'Cancel Reservation'}

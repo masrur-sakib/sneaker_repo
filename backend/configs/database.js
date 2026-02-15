@@ -1,11 +1,23 @@
-const { Sequelize } = require('sequelize'); // ORM library
+const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
-// Connect DB with Connection URL
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialect: 'postgres',
-  logging: false,
-});
+const isProduction = process.env.NODE_ENV === 'production';
+
+const sequelize = isProduction
+  ? new Sequelize(process.env.DATABASE_URL_LIVE, {
+      dialect: 'postgres',
+      dialectOptions: {
+        ssl: {
+          require: true,
+          rejectUnauthorized: false,
+        },
+      },
+      logging: false,
+    })
+  : new Sequelize(process.env.DATABASE_URL, {
+      dialect: 'postgres',
+      logging: false,
+    });
 
 // Test the connection
 async function testDBConnection() {

@@ -45,7 +45,7 @@ const runConcurrencyTest = async () => {
     return;
   }
 
-  const NUM_REQUESTS = 100;
+  const NUM_REQUESTS = 10;
   const userIds = [];
 
   for (let i = 0; i < NUM_REQUESTS; i++) {

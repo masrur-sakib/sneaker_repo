@@ -7,9 +7,10 @@ const SocketContext = createContext(null);
 export function SocketProvider({ children }) {
   const [stockUpdates, setStockUpdates] = useState({});
   const [recentPurchase, setRecentPurchase] = useState(null);
+  const SOCKET_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
   useEffect(() => {
-    const socket = io('http://localhost:4000');
+    const socket = io(SOCKET_URL); // live
 
     socket.on('connect', () => {
       // console.log('Socket connected:', socket.id);

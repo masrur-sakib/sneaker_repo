@@ -4,7 +4,7 @@ A full-stack application designed to handle high-concurrency "Limited Edition Sn
 
 ## 🚀 Live Demo & Video
 - **Live Application:** https://sneaker-repo.vercel.app/
-- **Video Demo (Loom):** will be added soon
+- **Video Demo (Loom):** https://www.loom.com/share/3d615892a65b44468f1a89c4f047a660
 
 ## 🛠 Tech Stack
 - **Frontend:** React, Tailwind CSS (for clean, functional UI)

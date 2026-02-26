@@ -70,14 +70,15 @@ git clone https://github.com/masrur-sakib/sneaker_repo.git
 ```shell
 npm i or npm install
 ```
-3. To run backend, frontend locally run following command from backend, frontend respactively
+3. To run backend, frontend locally run following command from backend, frontend folder respactively
 ```shell
 npm run dev
 ```
 
 ### Database Setup
 1. Create a .env file in the backend directory with your DATABASE_URL, PORT & FRONTEND_URL.
-2. The application uses sequelize.sync({ alter: true }) to automatically build the schema (Users, Drops, Reservations, Purchases) on startup.
+2. Create a .env file in the frontend directory with your VITE_API_URL.
+3. The application uses sequelize.sync({ alter: true }) to automatically build the schema (Users, Drops, Reservations, Purchases) on startup.
 
 ## 🧪 Concurrency Testing
 A dedicated script is provided to simulate high traffic and verify the "Atomic Reservation" system. It sends 10 concurrent requests to a single drop to ensure no overselling occurs.

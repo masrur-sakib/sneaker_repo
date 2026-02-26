@@ -3,8 +3,8 @@
 A full-stack application designed to handle high-concurrency "Limited Edition Sneaker Drops." The system ensures atomic reservations to prevent overselling and provides real-time stock synchronization across all clients.
 
 ## 🚀 Live Demo & Video
-- **Live Application:** wll be added soon
-- **Video Demo (Loom):** will be added soon
+- **Live Application:** https://sneaker-repo.vercel.app/
+- **Video Demo (Loom):** https://www.loom.com/share/3d615892a65b44468f1a89c4f047a660
 
 ## 🛠 Tech Stack
 - **Frontend:** React, Tailwind CSS (for clean, functional UI)

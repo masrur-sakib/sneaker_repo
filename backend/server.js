@@ -4,6 +4,7 @@ const http = require('http');
 const cors = require('cors');
 const { syncDatabase } = require('./models');
 const { initSocket } = require('./socket');
+const { getCustomers } = require('./routes/customers');
 
 const app = express();
 const server = http.createServer(app);
@@ -20,6 +21,8 @@ app.use('/api/users', require('./routes/users'));
 app.use('/api/drops', require('./routes/drops'));
 app.use('/api/reservations', require('./routes/reservations'));
 app.use('/api/purchases', require('./routes/purchases'));
+app.use('/api', require('./routes/customers'));
+
 
 // Start Server
 const PORT = process.env.PORT || 4000;

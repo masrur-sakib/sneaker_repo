@@ -83,7 +83,7 @@ const Register = () => {
                 htmlFor='username'
                 className='block text-gray-700 font-medium mb-2'
               >
-                Username
+                Full Name
               </label>
               <input
                 type='text'
@@ -93,7 +93,7 @@ const Register = () => {
                 onChange={handleChange}
                 required
                 className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition'
-                placeholder='Enter your username'
+                placeholder='Enter your Full Name'
               />
             </div>
 

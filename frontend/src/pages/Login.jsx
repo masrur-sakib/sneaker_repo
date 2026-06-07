@@ -45,6 +45,16 @@ const Login = () => {
       <div className='bg-white p-8 rounded-lg shadow-md w-full max-w-md'>
         <h2 className='text-2xl font-bold text-center mb-6'>Login</h2>
 
+        <div className='bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded mb-4 text-sm'>
+          <p className='font-semibold mb-1'>🔑 Demo Credentials</p>
+          <p>
+            Email: <span className='font-mono'>admin@gmail.com</span>
+          </p>
+          <p>
+            Password: <span className='font-mono'>admin1234</span>
+          </p>
+        </div>
+
         {error && (
           <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4'>
             {error}

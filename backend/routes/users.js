@@ -24,7 +24,14 @@ router.post('/', async (req, res) => {
       });
     }
 
-    const user = await User.create({ username, email, password });
+    // Hashing the password before saving to the database
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await User.create({
+      username,
+      email,
+      password: hashedPassword,
+    });
 
     res.status(201).json({
       id: user.id,

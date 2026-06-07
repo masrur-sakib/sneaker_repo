@@ -9,7 +9,7 @@ const api = axios.create({
 
 // User APIs
 export const createNewUser = (userData) => api.post('/api/users', userData);
-export const loginUser = (email) => api.post('/api/users/login', { email });
+export const loginUser = (formData) => api.post('/api/users/login', formData);
 export const getAllUsers = () => api.get('/api/users');
 
 // Drop APIs

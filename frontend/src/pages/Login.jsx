@@ -4,11 +4,21 @@ import { loginUser } from '../api/axios';
 import { useUser } from '../context/UserContext';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useUser();
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,12 +26,15 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await loginUser(email);
+      const response = await loginUser(formData);
       localStorage.setItem('user', JSON.stringify(response.data));
       login(response.data);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.error || 'Login failed');
+      setError(
+        err.response?.data?.error ||
+          'Login failed. Please check your credentials.',
+      );
     } finally {
       setLoading(false);
     }
@@ -49,11 +62,31 @@ const Login = () => {
             <input
               type='email'
               id='email'
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name='email'
+              value={formData.email}
+              onChange={handleChange}
               required
               className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
               placeholder='Enter your email'
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor='password'
+              className='block text-sm font-medium text-gray-700 mb-1'
+            >
+              Password
+            </label>
+            <input
+              type='password'
+              id='password'
+              name='password'
+              value={formData.password}
+              onChange={handleChange}
+              required
+              className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+              placeholder='Enter your password'
             />
           </div>
 

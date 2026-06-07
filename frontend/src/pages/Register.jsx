@@ -7,6 +7,8 @@ const Register = () => {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
+    password: '',
+    confirmPassword: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -24,15 +26,27 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    if (formData.password.length < 6) {
+      return setError('Password must be at least 6 characters.');
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      return setError('Passwords do not match.');
+    }
+
     setLoading(true);
 
     try {
-      const response = await createNewUser(formData);
+      const { confirmPassword: _confirmPassword, ...payload } = formData;
+      const response = await createNewUser(payload);
       login(response.data);
       navigate('/');
     } catch (err) {
       if (err.response?.status === 409) {
-        setError('Email already registered. Please use a different email.');
+        setError(
+          'Username or email already registered. Please use different credentials.',
+        );
       } else {
         setError(
           err.response?.data?.error || 'Registration failed. Please try again.',
@@ -69,7 +83,7 @@ const Register = () => {
                 htmlFor='username'
                 className='block text-gray-700 font-medium mb-2'
               >
-                Full Name
+                Username
               </label>
               <input
                 type='text'
@@ -79,7 +93,7 @@ const Register = () => {
                 onChange={handleChange}
                 required
                 className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition'
-                placeholder='Enter your user name'
+                placeholder='Enter your username'
               />
             </div>
 
@@ -99,6 +113,44 @@ const Register = () => {
                 required
                 className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition'
                 placeholder='Enter your email'
+              />
+            </div>
+
+            <div className='mb-6'>
+              <label
+                htmlFor='password'
+                className='block text-gray-700 font-medium mb-2'
+              >
+                Password
+              </label>
+              <input
+                type='password'
+                id='password'
+                name='password'
+                value={formData.password}
+                onChange={handleChange}
+                required
+                className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition'
+                placeholder='At least 6 characters'
+              />
+            </div>
+
+            <div className='mb-6'>
+              <label
+                htmlFor='confirmPassword'
+                className='block text-gray-700 font-medium mb-2'
+              >
+                Confirm Password
+              </label>
+              <input
+                type='password'
+                id='confirmPassword'
+                name='confirmPassword'
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                required
+                className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition'
+                placeholder='Re-enter your password'
               />
             </div>
 

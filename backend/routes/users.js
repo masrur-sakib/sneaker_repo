@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcrypt');
 const { User } = require('../models');
 
 /**
@@ -9,17 +10,27 @@ const { User } = require('../models');
  */
 router.post('/', async (req, res) => {
   try {
-    const { username, email } = req.body;
+    const { username, email, password } = req.body;
 
-    if (!username || !email) {
+    if (!username || !email || !password) {
       return res.status(400).json({
-        error: 'username and email are required',
+        error: 'username, email and password are required',
       });
     }
 
-    const user = await User.create({ username, email });
+    if (password.length < 6) {
+      return res.status(400).json({
+        error: 'Password must be at least 6 characters',
+      });
+    }
 
-    res.status(201).json(user);
+    const user = await User.create({ username, email, password });
+
+    res.status(201).json({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+    });
   } catch (error) {
     if (error.name === 'SequelizeUniqueConstraintError') {
       return res.status(409).json({
@@ -38,16 +49,22 @@ router.post('/', async (req, res) => {
  */
 router.post('/login', async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email, password } = req.body;
 
-    if (!email) {
-      return res.status(400).json({ error: 'Email is required' });
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' });
     }
 
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: 'Invalid email or password' });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Invalid email or password' });
     }
 
     res.json({

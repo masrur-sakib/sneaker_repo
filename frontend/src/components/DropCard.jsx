@@ -55,18 +55,15 @@ const DropCard = ({ drop }) => {
         </div>
 
         {/* Recent Purchasers Section */}
-        {drop.Purchases.length > 0 && (
-          <div className='mb-4 p-3 bg-gray-50 rounded-lg'>
-            <p className='text-xs text-gray-500 mb-3 font-medium'>
-              Recent Purchasers
-            </p>
-            <div className='space-y-2'>
-              {drop.Purchases.map((purchase) => (
+        <div className='mb-4 p-3 bg-gray-50 rounded-lg'>
+          <p className='text-xs text-gray-500 mb-3 font-medium'>
+            Recent Purchasers
+          </p>
+          <div className='space-y-2 h-[96px] overflow-hidden'>
+            {drop.Purchases.length > 0 ? (
+              drop.Purchases.map((purchase) => (
                 <div key={purchase.id} className='flex items-center gap-2'>
-                  <div
-                    className={`w-6 h-6 rounded-full bg-blue-500
-              flex items-center justify-center text-white text-xs font-bold`}
-                  >
+                  <div className='w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-bold'>
                     {purchase.User.username.charAt(0).toUpperCase()}
                   </div>
                   <p className='text-xs text-gray-700 font-medium flex-1 truncate'>
@@ -76,10 +73,12 @@ const DropCard = ({ drop }) => {
                     {dayjs(purchase.createdAt).fromNow()}
                   </p>
                 </div>
-              ))}
-            </div>
+              ))
+            ) : (
+              <p className='text-xs text-gray-400 italic'>No purchases yet</p>
+            )}
           </div>
-        )}
+        </div>
 
         <Link
           to={`/drops/${drop.id}`}
